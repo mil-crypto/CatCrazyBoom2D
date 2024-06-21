@@ -1,22 +1,17 @@
-using System;
 using UnityEngine;
 using TMPro;
 using YG;
 
 public class UIController : MonoBehaviour
 {
-    public static event Action RestartAction;
-    [SerializeField] private TextMeshProUGUI _scoreText , _curRecordTextEndGame, _maxRecordTextEndGame,_maxRecord ;
-    [SerializeField] private GameObject _endGamePanel, _finger;
-    [SerializeField] private Vector2 _recordAnimScale;
+    [SerializeField] private GameObject _finger;
     private void Start()
     {
-        _scoreText.gameObject.SetActive(true);
 
         SnowFlakesData.MaxRecord = PlayerPrefs.GetInt("MaxRecord");
-        _maxRecord.text = SnowFlakesData.MaxRecord.ToString();
-        _maxRecord.gameObject.SetActive(true);
-        _endGamePanel.SetActive(false);
+       // _maxRecord.text = SnowFlakesData.MaxRecord.ToString();
+       // _maxRecord.gameObject.SetActive(true);
+       // _endGamePanel.SetActive(false);
         PauseOn();
         Debug.Log("record = " + SnowFlakesData.MaxRecord);
 
@@ -24,30 +19,34 @@ public class UIController : MonoBehaviour
 
     private void OnEnable()
     {
-        FloorEndGame.EndGameAction += EndGamePanelActivate;
+       // FloorEndGame.EndGameAction += EndGamePanelActivate;
         YandexGame.OpenFullAdEvent += PauseOn;
         YandexGame.OpenVideoEvent += PauseOn;
         
     }
     private void OnDisable()
     {
-        FloorEndGame.EndGameAction -= EndGamePanelActivate;
+        //FloorEndGame.EndGameAction -= EndGamePanelActivate;
         YandexGame.OpenFullAdEvent -= PauseOn;
         YandexGame.OpenVideoEvent -= PauseOn;
     }
+    private void OnMouseDown()
+    {
+        PauseOf();
+    }
     public void RestartButton()
     {
-        RestartAction?.Invoke();
         YandexGame.FullscreenShow();
         PauseOn();
+        EventsController.InvokeRestartEvent();
     }
     private void EndGamePanelActivate()
     {
-        _curRecordTextEndGame.text = SnowFlakesData.CurrentRecord.ToString();
-        _maxRecordTextEndGame.text = SnowFlakesData.MaxRecord.ToString();
-        _endGamePanel.SetActive(true);
-        _scoreText.gameObject.SetActive(false);
-        _maxRecord.gameObject.SetActive(false);
+       // _curRecordTextEndGame.text = SnowFlakesData.CurrentRecord.ToString();
+       // _maxRecordTextEndGame.text = SnowFlakesData.MaxRecord.ToString();
+       // _endGamePanel.SetActive(true);
+        //_scoreText.gameObject.SetActive(false);
+       // _maxRecord.gameObject.SetActive(false);
     }
     public void PauseOn()
     {

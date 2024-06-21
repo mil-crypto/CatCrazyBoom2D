@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using YG;
 
@@ -16,10 +15,13 @@ public class SoundsController : MonoBehaviour
         YandexGame.CloseFullAdEvent += PauseOf;
         YandexGame.CloseVideoEvent += PauseOf;
 
-        CollisionSnowFlake.Collission2ArgumentAction += PlayMeow;
+        //CollisionSnowFlake.Collission2ArgumentAction += PlayMeow;
 
-        EventsController.CreatePrefEvent += ChpokSound;
-        EventsController.ExploseEvent += ExploseSound;
+        //EventsController.CreatePrefEvent += ChpokSound;
+        //EventsController.ExploseEvent += ExploseSound;
+
+        EventsController.OnTriggerCatEvent += CatMeowSound;
+        EventsController.OnTriggerWallEvent += ChpokSound;
 
     }
 
@@ -31,12 +33,13 @@ public class SoundsController : MonoBehaviour
         YandexGame.CloseFullAdEvent += PauseOf;
         YandexGame.CloseVideoEvent += PauseOf;
 
-        CollisionSnowFlake.Collission2ArgumentAction-= PlayMeow;
+        //CollisionSnowFlake.Collission2ArgumentAction-= PlayMeow;
 
-        EventsController.CreatePrefEvent -= ChpokSound;
-        EventsController.ExploseEvent -= ExploseSound;
-
+        //EventsController.CreatePrefEvent -= ChpokSound;
+        //EventsController.ExploseEvent -= ExploseSound;
         
+        EventsController.OnTriggerCatEvent -= CatMeowSound;
+        EventsController.OnTriggerWallEvent -= ChpokSound;
     }
     private void PauseOn()
     {
@@ -107,6 +110,14 @@ public class SoundsController : MonoBehaviour
         if (!Pause)
         {
             _soundAudioSource.PlayOneShot(_chpokAudio);
+        }
+    }
+
+    private void CatMeowSound(Vector2 catPos)
+    {
+        if (!Pause)
+        {
+            _soundAudioSource.PlayOneShot(_doorbelMeow);
         }
     }
 

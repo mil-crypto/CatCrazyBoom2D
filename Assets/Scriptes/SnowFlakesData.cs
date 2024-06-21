@@ -107,14 +107,14 @@ public class SnowFlakesData : MonoBehaviour
 
     private void OnEnable()
     {
-        UIController.RestartAction += Restart;
+        //UIController.RestartAction += Restart;
         EventsController.AddScoreEvent += AddScore;
         FloorEndGame.EndGameAction += CheckRecord;
         FloorEndGame.EndGameAction += UpdateLeaderBoard;
     }
     private void OnDisable()
     {
-        UIController.RestartAction -= Restart;
+       // UIController.RestartAction -= Restart;
         EventsController.AddScoreEvent -= AddScore;
         FloorEndGame.EndGameAction -= CheckRecord;
         FloorEndGame.EndGameAction -= UpdateLeaderBoard;
@@ -143,9 +143,5 @@ public class SnowFlakesData : MonoBehaviour
     {
         _leaderboardYG.NewScore(MaxRecord);
     }
-    private void Restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-    }
+   
 }

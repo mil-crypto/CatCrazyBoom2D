@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Thorn : MonoBehaviour
@@ -34,6 +36,20 @@ public class Thorn : MonoBehaviour
                 _thornRigid.position = mousePos; 
             }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.CompareTag("cat"))
+        {
+            col.gameObject.SetActive(false);
+            EventsController.InvokeOnTriggerCatEvent(col.gameObject.transform.position);
+        }
+        else
+        {
+            EventsController.InvokeOnTriggerWallEvent();
+        }
+        
     }
 
     private void OnMouseDown()

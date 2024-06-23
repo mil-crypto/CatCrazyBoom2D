@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Thorn : MonoBehaviour
@@ -17,7 +15,7 @@ public class Thorn : MonoBehaviour
 
     private void Start()
     {
-        _thornRigid = GetComponent<Rigidbody2D>(); 
+        _thornRigid = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -43,7 +41,8 @@ public class Thorn : MonoBehaviour
         if (col.gameObject.CompareTag("cat"))
         {
             col.gameObject.SetActive(false);
-            EventsController.InvokeOnTriggerCatEvent(col.gameObject.transform.position);
+            EventsController.InvokeOnTriggerCatEvent(col.gameObject);
+            
         }
         else
         {

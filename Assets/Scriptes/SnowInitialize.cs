@@ -93,7 +93,6 @@ public class SnowInitialize : MonoBehaviour
     private void OnMouseUp()
     {
         if (_prefab != null) {
-            EventsController.InokeCreatePrefEvent();
             _prefab.GetComponent<Rigidbody2D>().isKinematic = false;
             _prefab = null;
             _coolDown = true;

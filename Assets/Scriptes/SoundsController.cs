@@ -113,7 +113,7 @@ public class SoundsController : MonoBehaviour
         }
     }
 
-    private void CatMeowSound(Vector2 catPos)
+    private void CatMeowSound(GameObject obj)
     {
         if (!Pause)
         {

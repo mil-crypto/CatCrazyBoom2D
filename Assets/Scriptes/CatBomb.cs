@@ -66,7 +66,6 @@ public class CatBomb : MonoBehaviour
     private IEnumerator Explose()
     {
         yield return new WaitForSeconds(3f);
-        EventsController.InvokeExploseEvent();
         GameObject particle = Instantiate(_exploseEffect);
         particle.GetComponent<Renderer>().sortingOrder = 4;
         particle.transform.position = transform.position;

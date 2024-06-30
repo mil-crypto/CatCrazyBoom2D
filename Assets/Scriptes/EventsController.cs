@@ -6,7 +6,7 @@ public class EventsController : MonoBehaviour
     public static event Action <int> AddScoreEvent;
     public static event Action RestartEvent;
     public static event Action <GameObject> OnTriggerCatEvent;
-    public static event Action OnTriggerWallEvent;
+    public static event Action <GameObject> OnTriggerWallEvent;
     public static event Action EndlevelEvent;
     public static void InvokeAddScoreEvent(int score)
     {
@@ -22,9 +22,9 @@ public class EventsController : MonoBehaviour
         OnTriggerCatEvent?.Invoke(obj);
     }
 
-    public static void InvokeOnTriggerWallEvent()
+    public static void InvokeOnTriggerWallEvent(GameObject obj)
     {
-        OnTriggerWallEvent?.Invoke();
+        OnTriggerWallEvent?.Invoke(obj);
     }
 
     public static void InvokeEndLevelEvent()

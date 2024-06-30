@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,9 +6,6 @@ public class Thorn : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _thornRigid; // Rigidbody для птицы
     [SerializeField] private Rigidbody2D _shootRigid; // Rigidbody для рогатки
-
-    [SerializeField] private GameObject _thornPrefab; // префаб для птицы
-    [SerializeField] private Transform _thornSpawnerPos; // позиция птицы
 
     [SerializeField] private float _maxDistance = 3f; // максимальный радиус окружности, куда можно увести снаряд
 
@@ -22,13 +20,11 @@ public class Thorn : MonoBehaviour
     {
         if (_isPressed == true) 
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (Vector2.Distance(mousePos, _shootRigid.position) > _maxDistance) 
             {
                 _thornRigid.position = _shootRigid.position + (mousePos - _shootRigid.position).normalized * _maxDistance; 
             }
-
             else
             {
                 _thornRigid.position = mousePos; 
@@ -42,13 +38,15 @@ public class Thorn : MonoBehaviour
         {
             col.gameObject.SetActive(false);
             EventsController.InvokeOnTriggerCatEvent(col.gameObject);
-            
         }
-        else
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("wall"))
         {
-            EventsController.InvokeOnTriggerWallEvent();
+            EventsController.InvokeOnTriggerWallEvent(gameObject);
         }
-        
     }
 
     private void OnMouseDown()
@@ -71,18 +69,5 @@ public class Thorn : MonoBehaviour
 
         gameObject.GetComponent<SpringJoint2D>().enabled = false; 
         this.enabled = false;
-        //Destroy(gameObject, 5); 
-
-        //yield return new WaitForSeconds(2); 
-
-        //if (_thornPrefab != null) 
-       // {
-        //    _thornPrefab.transform.position = _thornSpawnerPos.position; // то птички (которые находятся на земле) перемещаются на рогатку
-      // }
-
-       // else
-        //{
-         //   SceneManager.LoadScene(0); // если птички кончились, то сцена перезапускается
-        //}
     }
 }

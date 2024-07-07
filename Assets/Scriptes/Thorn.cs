@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -32,18 +31,14 @@ public class Thorn : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("cat"))
         {
             col.gameObject.SetActive(false);
             EventsController.InvokeOnTriggerCatEvent(col.gameObject);
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.CompareTag("wall"))
+        else if (col.gameObject.CompareTag("wall"))
         {
             EventsController.InvokeOnTriggerWallEvent(gameObject);
         }

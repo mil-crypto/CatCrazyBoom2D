@@ -10,8 +10,6 @@ public class UIController : MonoBehaviour
     {
 
         SnowFlakesData.MaxRecord = PlayerPrefs.GetInt("MaxRecord");
-       // _maxRecord.text = SnowFlakesData.MaxRecord.ToString();
-       // _maxRecord.gameObject.SetActive(true);
         _endGamePanel.SetActive(false);
         PauseOn();
 
@@ -26,7 +24,7 @@ public class UIController : MonoBehaviour
     }
     private void OnDisable()
     {
-        EventsController.EndlevelEvent += EndGamePanelActivate;
+        EventsController.EndlevelEvent -= EndGamePanelActivate;
         YandexGame.OpenFullAdEvent -= PauseOn;
         YandexGame.OpenVideoEvent -= PauseOn;
     }
@@ -42,11 +40,7 @@ public class UIController : MonoBehaviour
     }
     private void EndGamePanelActivate()
     {
-        //_curRecordTextEndGame.text = SnowFlakesData.CurrentRecord.ToString();
-        //_maxRecordTextEndGame.text = SnowFlakesData.MaxRecord.ToString();
         _endGamePanel.SetActive(true);
-        //_scoreText.gameObject.SetActive(false);
-        //_maxRecord.gameObject.SetActive(false);
     }
     public void PauseOn()
     {

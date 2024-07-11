@@ -1,11 +1,12 @@
+using System;
 using UnityEngine;
 using YG;
-
 public class SoundsController : MonoBehaviour
 {
     [SerializeField] private AudioClip _wallAudio , _catTriggerSound;
     [SerializeField] private AudioSource _soundAudioSource;
     [HideInInspector] public bool Pause;
+    private bool _soundBool;
 
     private void OnEnable()
     {
@@ -17,6 +18,8 @@ public class SoundsController : MonoBehaviour
 
         EventsController.OnTriggerCatEvent += CatMeowSound;
         EventsController.OnTriggerWallEvent += WallChpokSound;
+
+        EventsController.SoundsButtonPressedEvent += SoundBool;
 
     }
 
@@ -30,6 +33,7 @@ public class SoundsController : MonoBehaviour
 
         EventsController.OnTriggerCatEvent -= CatMeowSound;
         EventsController.OnTriggerWallEvent -= WallChpokSound;
+        EventsController.SoundsButtonPressedEvent -= SoundBool;
     }
 
     private void PauseOn()
@@ -44,7 +48,7 @@ public class SoundsController : MonoBehaviour
     }
     private void CatMeowSound(GameObject obj)
     {
-        if (!Pause)
+        if (!Pause&&!_soundBool)
         {
             _soundAudioSource.PlayOneShot(_catTriggerSound);
         }
@@ -52,11 +56,15 @@ public class SoundsController : MonoBehaviour
     
     private void WallChpokSound(GameObject obj)
     {
-        if (!Pause)
+        if (!Pause&&!_soundBool)
         {
             _soundAudioSource.PlayOneShot(_wallAudio);
         }
     }
 
+    private void SoundBool(Boolean soundBool)
+    {
+        _soundBool = soundBool;
+    }
    
 }

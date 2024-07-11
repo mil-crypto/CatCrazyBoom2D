@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - cat
-  - snow6
   - wall
+  - baloon
+  - snow6
   layers:
   - Default
   - TransparentFX

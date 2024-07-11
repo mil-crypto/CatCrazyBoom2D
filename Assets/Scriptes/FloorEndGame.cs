@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-
 public class FloorEndGame : MonoBehaviour
 {
     public static event Action EndGameAction;

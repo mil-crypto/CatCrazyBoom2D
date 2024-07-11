@@ -1,17 +1,12 @@
 using System;
 using UnityEngine;
-
 public class EventsController : MonoBehaviour
 {
-    public static event Action <int> AddScoreEvent;
     public static event Action RestartEvent;
     public static event Action <GameObject> OnTriggerCatEvent;
     public static event Action <GameObject> OnTriggerWallEvent;
     public static event Action EndlevelEvent;
-    public static void InvokeAddScoreEvent(int score)
-    {
-        AddScoreEvent?.Invoke(score);
-    }
+    public static event Action <Boolean> SoundsButtonPressedEvent;
     public static void InvokeRestartEvent()
     {
         RestartEvent?.Invoke();
@@ -30,6 +25,11 @@ public class EventsController : MonoBehaviour
     public static void InvokeEndLevelEvent()
     {
         EndlevelEvent?.Invoke();
+    }
+
+    public static void InvokeSoundsButtonPressedEvent(Boolean sound)
+    {
+        SoundsButtonPressedEvent?.Invoke(sound);
     }
 }
 

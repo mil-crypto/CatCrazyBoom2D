@@ -1,55 +1,72 @@
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject _finger;
-    [SerializeField] private GameObject _endGamePanel;
-
+    [SerializeField] private Button _soundsButton;
+    [SerializeField] private Sprite  _soundsON, _soundsOF;
+    private bool _soundBool;
     private void Start()
     {
-
-        SnowFlakesData.MaxRecord = PlayerPrefs.GetInt("MaxRecord");
-        _endGamePanel.SetActive(false);
         PauseOn();
+        if (_soundBool)
+        {
+            _soundsButton.GetComponent<Image>().sprite = _soundsOF;
+            _soundBool =  true;
+            EventsController.InvokeSoundsButtonPressedEvent(true);
 
+        }
+        else if (!_soundBool)
+        {
+            _soundsButton.GetComponent<Image>().sprite = _soundsON;
+            _soundBool = false;
+            EventsController.InvokeSoundsButtonPressedEvent(false);
+        }
     }
 
     private void OnEnable()
     {
-        EventsController.EndlevelEvent += EndGamePanelActivate;
         YandexGame.OpenFullAdEvent += PauseOn;
         YandexGame.OpenVideoEvent += PauseOn;
         
     }
     private void OnDisable()
     {
-        EventsController.EndlevelEvent -= EndGamePanelActivate;
         YandexGame.OpenFullAdEvent -= PauseOn;
         YandexGame.OpenVideoEvent -= PauseOn;
     }
-    private void OnMouseDown()
-    {
-        PauseOf();
-    }
+ 
     public void RestartButton()
     {
         YandexGame.FullscreenShow();
         PauseOn();
         EventsController.InvokeRestartEvent();
     }
-    private void EndGamePanelActivate()
-    {
-        _endGamePanel.SetActive(true);
-    }
     public void PauseOn()
     {
         Time.timeScale = 0;
-        _finger.SetActive(true);
     }
     public void PauseOf()
     {
         Time.timeScale = 1;
         _finger.SetActive(false);
+    }
+    public void SoundsButton()
+    {
+        if (_soundBool)
+        {
+            _soundsButton.GetComponent<Image>().sprite = _soundsON;
+            _soundBool = false;
+            EventsController.InvokeSoundsButtonPressedEvent(false);
+
+        }
+        else if (!_soundBool)
+        {
+            _soundsButton.GetComponent<Image>().sprite = _soundsOF;
+            _soundBool = true;
+            EventsController.InvokeSoundsButtonPressedEvent(true);
+        }
     }
 }

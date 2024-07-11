@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
-
 public class Thorn : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _thornRigid; // Rigidbody для птицы
     [SerializeField] private Rigidbody2D _shootRigid; // Rigidbody для рогатки
+
+    [SerializeField] private BaloonsList _baloonsList;
 
     [SerializeField] private float _maxDistance = 3f; // максимальный радиус окружности, куда можно увести снаряд
 
@@ -30,20 +31,28 @@ public class Thorn : MonoBehaviour
             }
         }
     }
-
+    
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("cat"))
+        if (col.gameObject.CompareTag("baloon"))
         {
             col.gameObject.SetActive(false);
             EventsController.InvokeOnTriggerCatEvent(col.gameObject);
+            foreach (var VARIABLE in _baloonsList.GetBaloonList())
+            {
+                if (VARIABLE.activeSelf)
+                {
+                    return;
+                }
+            }
+            EventsController.InvokeEndLevelEvent();
+            gameObject.SetActive(false);
         }
         else if (col.gameObject.CompareTag("wall"))
         {
             EventsController.InvokeOnTriggerWallEvent(gameObject);
         }
     }
-
     private void OnMouseDown()
     {
         _isPressed = true; 

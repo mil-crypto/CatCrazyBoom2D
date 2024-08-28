@@ -1,16 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
-
+using DG.Tweening;
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject _finger;
+    [SerializeField] private GameObject _restartBurrom;
     [SerializeField] private Button _soundsButton;
     [SerializeField] private Sprite  _soundsON, _soundsOF;
     private bool _soundBool;
+    private Vector3 _startRestartButtomPos;
     private void Start()
     {
-        PauseOn();
+        PauseOf();
+        _startRestartButtomPos = _restartBurrom.transform.position;
         if (_soundBool)
         {
             _soundsButton.GetComponent<Image>().sprite = _soundsOF;
@@ -25,23 +28,22 @@ public class UIController : MonoBehaviour
             EventsController.InvokeSoundsButtonPressedEvent(false);
         }
     }
-
     private void OnEnable()
     {
         YandexGame.OpenFullAdEvent += PauseOn;
         YandexGame.OpenVideoEvent += PauseOn;
-        
+        EventsController.LooseGameAction += Loose;
     }
     private void OnDisable()
     {
         YandexGame.OpenFullAdEvent -= PauseOn;
         YandexGame.OpenVideoEvent -= PauseOn;
+        EventsController.LooseGameAction -= Loose;
     }
  
     public void RestartButton()
     {
         YandexGame.FullscreenShow();
-        PauseOn();
         EventsController.InvokeRestartEvent();
     }
     public void PauseOn()
@@ -68,5 +70,9 @@ public class UIController : MonoBehaviour
             _soundBool = true;
             EventsController.InvokeSoundsButtonPressedEvent(true);
         }
+    }
+    private void Loose()
+    {
+        _restartBurrom.transform.DOMove(new Vector3(840,376,0), 2f);
     }
 }

@@ -1,38 +1,65 @@
-using System.Collections;
+using System;
 using UnityEngine;
+
 public class Thorn : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D _thornRigid; // Rigidbody для птицы
-    [SerializeField] private Rigidbody2D _shootRigid; // Rigidbody для рогатки
-
+    [HideInInspector] public Rigidbody2D rb;
+    [HideInInspector] public CircleCollider2D col;
     [SerializeField] private BaloonsList _baloonsList;
+    
+    Camera cam;
+    [SerializeField] private Trajectory _trajectory;
+    [SerializeField] private float _pushForce = 4f;
 
-    [SerializeField] private float _maxDistance = 3f; // максимальный радиус окружности, куда можно увести снаряд
+    private bool _isDragging = false;
 
-    [SerializeField] private bool _isPressed = false; 
+    private Vector2 _startPoint;
+    private Vector2 _endPoint;
+    private Vector2 _direction;
+    private Vector2 _force;
+    private float _distance;
 
-    private void Start()
+    //---------------------------------------
+    void Start ()
     {
-        _thornRigid = GetComponent<Rigidbody2D>();
-    }
-
-    private void Update()
-    {
-        if (_isPressed == true) 
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (Vector2.Distance(mousePos, _shootRigid.position) > _maxDistance) 
-            {
-                _thornRigid.position = _shootRigid.position + (mousePos - _shootRigid.position).normalized * _maxDistance; 
-            }
-            else
-            {
-                _thornRigid.position = mousePos; 
-            }
-        }
+        cam = Camera.main;
+        DesactivateRb();
     }
     
+    [HideInInspector] public Vector3 pos { get { return transform.position; } }
+
+    void Awake ()
+    {
+        rb = GetComponent<Rigidbody2D> ();
+        col = GetComponent<CircleCollider2D> ();
+    }
+
+    public void Push (Vector2 force)
+    {
+        rb.AddForce (force, ForceMode2D.Impulse);
+    }
+
+    public void ActivateRb ()
+    {
+        rb.isKinematic = false;
+    }
+
+    public void DesactivateRb ()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = 0f;
+        rb.isKinematic = true;
+    }
     private void OnCollisionEnter2D(Collision2D col)
+    {
+        
+        if (col.gameObject.CompareTag("wall"))
+        {
+            EventsController.InvokeOnTriggerWallEvent(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("baloon"))
         {
@@ -48,30 +75,39 @@ public class Thorn : MonoBehaviour
             EventsController.InvokeEndLevelEvent();
             gameObject.SetActive(false);
         }
-        else if (col.gameObject.CompareTag("wall"))
-        {
-            EventsController.InvokeOnTriggerWallEvent(gameObject);
-        }
     }
+
     private void OnMouseDown()
     {
-        _isPressed = true; 
-        _thornRigid.isKinematic = true; 
+        PauseOF();
+        DesactivateRb ();
+        _startPoint = cam.ScreenToWorldPoint (Input.mousePosition);
+        _trajectory.Show ();
+    }
+
+    private void OnMouseDrag()
+    {
+        _endPoint = cam.ScreenToWorldPoint (Input.mousePosition);
+        _distance = Vector2.Distance (_startPoint, _endPoint);
+        _direction = (_startPoint - _endPoint).normalized;
+        _force = _direction * (_distance * _pushForce);
+
+        //just for debug
+        Debug.DrawLine (_startPoint, _endPoint);
+
+
+        _trajectory.UpdateDots (pos, _force);
     }
 
     private void OnMouseUp() 
     {
-        _isPressed = false; 
-        _thornRigid.isKinematic = false; 
-
-        StartCoroutine(LetGo()); 
+        ActivateRb (); 
+        Push (_force); 
+        _trajectory.Hide ();
     }
 
-    IEnumerator LetGo()
+    private void PauseOF()
     {
-        yield return new WaitForSeconds(0.1f); 
-
-        gameObject.GetComponent<SpringJoint2D>().enabled = false; 
-        this.enabled = false;
+        Time.timeScale = 1f;
     }
 }

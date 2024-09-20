@@ -7,7 +7,7 @@ public class FloorEndGame : MonoBehaviour
         if (colTag == "Player")
         {
             EventsController.InvokeLooseGameAction();
-            Debug.Log("ENDGAME LOOOSE");
+            collision.gameObject.SetActive(false);
         }
     }
 }

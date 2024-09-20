@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Thorn : MonoBehaviour
@@ -10,6 +9,8 @@ public class Thorn : MonoBehaviour
     Camera cam;
     [SerializeField] private Trajectory _trajectory;
     [SerializeField] private float _pushForce = 4f;
+    [SerializeField] private float _maxDistance;
+    [SerializeField] private bool _activeFinger;
 
     private bool _isDragging = false;
 
@@ -18,12 +19,19 @@ public class Thorn : MonoBehaviour
     private Vector2 _direction;
     private Vector2 _force;
     private float _distance;
+    private bool _activeRB;
 
     //---------------------------------------
     void Start ()
     {
         cam = Camera.main;
         DesactivateRb();
+        if (_activeFinger)
+        {
+            GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        _activeRB = true;
     }
     
     [HideInInspector] public Vector3 pos { get { return transform.position; } }
@@ -79,33 +87,43 @@ public class Thorn : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (_activeRB)
+        {
         PauseOF();
-        DesactivateRb ();
+        DesactivateRb(); 
+        Debug.Log(_activeRB);
         _startPoint = cam.ScreenToWorldPoint (Input.mousePosition);
         _trajectory.Show ();
+        }
     }
-
     private void OnMouseDrag()
     {
-        _endPoint = cam.ScreenToWorldPoint (Input.mousePosition);
-        _distance = Vector2.Distance (_startPoint, _endPoint);
-        _direction = (_startPoint - _endPoint).normalized;
-        _force = _direction * (_distance * _pushForce);
+        if (_activeRB)
+        {
+            _endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+            _distance = Vector2.Distance(_startPoint, _endPoint);
+            if (_distance > _maxDistance)
+            {
+                _distance = _maxDistance;
+            }
 
-        //just for debug
-        Debug.DrawLine (_startPoint, _endPoint);
+            _direction = (_startPoint - _endPoint).normalized;
+            _force = _direction * (_distance * _pushForce);
+            _trajectory.UpdateDots(pos, _force);
+        }
 
-
-        _trajectory.UpdateDots (pos, _force);
     }
-
     private void OnMouseUp() 
     {
-        ActivateRb (); 
-        Push (_force); 
+        if (_activeRB)
+        {
+            ActivateRb();
+            Push(_force);
+            _activeRB = false;
+        }
+
         _trajectory.Hide ();
     }
-
     private void PauseOF()
     {
         Time.timeScale = 1f;

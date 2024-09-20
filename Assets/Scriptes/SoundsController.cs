@@ -3,10 +3,22 @@ using UnityEngine;
 using YG;
 public class SoundsController : MonoBehaviour
 {
-    [SerializeField] private AudioClip _wallAudio , _catTriggerSound;
+    [SerializeField] private AudioClip _wallSound, _baloonTriggerSound, _fireworkSound ,_gameOverSound;
     [SerializeField] private AudioSource _soundAudioSource;
     [HideInInspector] public bool Pause;
     private bool _soundBool;
+
+    private void Start()
+    {
+        if (PlayerPrefs.GetInt("SoundOn") == 1)
+        {
+            _soundBool = true;
+        }
+        else
+        {
+            _soundBool = false;
+        }
+    }
 
     private void OnEnable()
     {
@@ -21,6 +33,9 @@ public class SoundsController : MonoBehaviour
 
         EventsController.SoundsButtonPressedEvent += SoundBool;
 
+        EventsController.WinlevelEvent += FireWorkSound;
+        EventsController.LooseGameAction += GameOverSound;
+
     }
 
     private void OnDisable()
@@ -33,7 +48,11 @@ public class SoundsController : MonoBehaviour
 
         EventsController.OnTriggerCatEvent -= CatMeowSound;
         EventsController.OnTriggerWallEvent -= WallChpokSound;
+        
         EventsController.SoundsButtonPressedEvent -= SoundBool;
+        
+        EventsController.WinlevelEvent -= FireWorkSound;
+        EventsController.LooseGameAction -= GameOverSound;
     }
 
     private void PauseOn()
@@ -50,7 +69,7 @@ public class SoundsController : MonoBehaviour
     {
         if (!Pause&&!_soundBool)
         {
-            _soundAudioSource.PlayOneShot(_catTriggerSound);
+            _soundAudioSource.PlayOneShot(_baloonTriggerSound);
         }
     }
     
@@ -58,13 +77,37 @@ public class SoundsController : MonoBehaviour
     {
         if (!Pause&&!_soundBool)
         {
-            _soundAudioSource.PlayOneShot(_wallAudio);
+            _soundAudioSource.PlayOneShot(_wallSound);
+        }
+    }
+    private void FireWorkSound()
+    {
+        if (!Pause&&!_soundBool)
+        {
+            _soundAudioSource.PlayOneShot(_fireworkSound);
+        }
+    }
+
+    private void GameOverSound()
+    {
+        if (!Pause&&!_soundBool)
+        {
+            _soundAudioSource.PlayOneShot(_gameOverSound);
         }
     }
 
     private void SoundBool(Boolean soundBool)
     {
-        _soundBool = soundBool;
+        if (soundBool)
+        {
+            PlayerPrefs.SetInt("SoundOn",1);
+            _soundBool = true;
+        }
+        else
+        {
+            PlayerPrefs.SetInt("SoundOn",0);
+            _soundBool = false;
+        }
     }
    
 }

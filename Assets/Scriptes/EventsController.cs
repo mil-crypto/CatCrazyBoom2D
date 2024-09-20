@@ -3,6 +3,7 @@ using UnityEngine;
 public class EventsController : MonoBehaviour
 {
     public static event Action RestartEvent;
+    public static event Action NextLvlEvent;
     public static event Action <GameObject> OnTriggerCatEvent;
     public static event Action <GameObject> OnTriggerWallEvent;
     public static event Action WinlevelEvent;
@@ -11,6 +12,10 @@ public class EventsController : MonoBehaviour
     public static void InvokeRestartEvent()
     {
         RestartEvent?.Invoke();
+    }
+    public static void InvokeNextLvlEvent()
+    {
+        NextLvlEvent?.Invoke();
     }
 
     public static void InvokeOnTriggerCatEvent(GameObject obj)
